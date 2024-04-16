@@ -1,0 +1,61 @@
+CREATE TABLE Cliente
+(
+	cpf INTEGER NOT NULL,
+	nome_cli varchar(40) NOT NULL,
+	estado varchar(25),
+	rua varchar(70),
+	numero_casa integer,
+	CONSTRAINT cpf_pk PRIMARY KEY (cpf)
+);
+CREATE TABLE Vendedor
+(
+	id_vend SERIAL NOT NULL,
+	nome_vend varchar(40) NOT NULL,
+	salario integer NOT NULL,
+	estado varchar(25),
+	rua varchar(70),
+	numero_casa integer,
+	CONSTRAINT id_vend_pk PRIMARY KEY (id_vend)
+);
+CREATE TABLE Item
+(
+	cod_item SERIAL NOT NULL,
+	nome_item varchar(40) NOT NULL,
+	preco integer NOT NULL,
+	em_estoque integer NOT NULL,
+	CONSTRAINT cod_item_pk PRIMARY KEY (cod_item)
+);
+CREATE TABLE Fornecedor
+(
+	id_forn SERIAL NOT NULL,
+	nome_forn varchar(40) NOT NULL,
+	salario integer NOT NULL,
+	estado varchar(25),
+	CONSTRAINT id_forn_pk PRIMARY KEY (id_forn)
+);
+CREATE TABLE Compra
+(
+	cod_item INTEGER,
+	id_forn INTEGER,
+	date_comp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT full_pk PRIMARY KEY (cod_item,id_forn,date_comp),
+	CONSTRAINT cod_item_fk FOREIGN KEY (cod_item)
+	REFERENCES Item (cod_item),
+	CONSTRAINT id_forn_fk FOREIGN KEY (id_forn)
+	REFERENCES Fornecedor (id_forn)
+);
+CREATE TABLE Venda
+(
+	cod_vend SERIAL,
+	cod_item INTEGER,
+	id_vend INTEGER,
+	id_cli INTEGER,
+	date_vend TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT cod_vend_pk PRIMARY KEY (cod_vend),
+	CONSTRAINT cod_item_fk FOREIGN KEY (cod_item)
+	REFERENCES Item (cod_item),
+	CONSTRAINT id_vend_fk FOREIGN KEY (id_vend)
+	REFERENCES Vendedor (id_vend),
+	CONSTRAINT id_cli_fk FOREIGN KEY (id_cli)
+	REFERENCES Cliente (cpf)
+);
