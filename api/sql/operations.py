@@ -69,7 +69,7 @@ def update_cliente_cpf(old_cpf:int, new_cpf:int, nome_cli:str):
     operator.execute(sql_code,(new_cpf,old_cpf,nome_cli))
     connection.commit()
     
-def updadte_cliente(cpf:int, nome_cli:str, estado:str, cidade:str, rua:str, numero_casa:int, is_flamengo:bool, see_op:bool):
+def update_cliente(cpf:int, nome_cli:str, estado:str, cidade:str, rua:str, numero_casa:int, is_flamengo:bool, see_op:bool):
     sql_code = '''UPDATE cliente SET nome_cli = %s,
                   estado = %s,
                   rua = %s,

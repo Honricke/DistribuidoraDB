@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from type.types import ItemType, InsertType
+from type.types import *
 import sql.operations as op
 
 
@@ -33,4 +33,27 @@ def update_qtd(req: ItemType):
 @router.post("/insert_fornecedor",response_model= ItemType)
 def insert_fornecedor(req: ItemType):
     return op.insert_fornecedor(req)
-    
+
+@router.post("/update_estoque",response_model=ItemType)
+def update_estoque(req: ItemType):
+    return op.update_estoque(req)
+
+@router.post("/update_price",response_model=ItemType)
+def update_price(req: ItemType):
+    return op.update_price(req)
+
+@router.get("/mais_vendidos")
+def mais_vendidos():
+    return op.mais_vendidos()    
+
+@router.put("/cadastro_cliente",response_model= Cliente)
+def cadastro_cliente(req: Cliente):
+    return op.cadastro_cliente()
+
+@router.post("/update_cliente_cpf",response_model= Cliente)
+def update_cliente_cpf(req: Cliente):
+    return op.update_cliente_cpf()
+
+@router.post("/update_cliente",response_model= Cliente)
+def update_cliente(rep: Cliente):
+    return op.update_cliente()
