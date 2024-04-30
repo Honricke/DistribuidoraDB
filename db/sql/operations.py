@@ -6,11 +6,11 @@ from datetime import datetime, timezone
 
 
 
-def get_names():
-    sql_code = "SELECT name FROM item"
+def get_itens():
+    sql_code = "SELECT * FROM item"
     operator.execute(sql_code)
     response = operator.fetchall()
-    names = [row['name'] for row in response]
+    names = [row['nome_item'] for row in response]
     return names
 
 #query itens:
@@ -47,6 +47,39 @@ def update_price(item_id: int,new_price: int):
     operator.execute(sql_code,(new_price,item_id))
     connection.commit()
     return {"cod_item": item_id, "price":new_price}
+
+def mais_vendidos():
+    sql_code =  '''SELECT i.nome_item, COUNT(v.cod_item) AS quantidade_vendida
+    FROM venda v
+    JOIN item i ON v.cod_item = i.cod_item
+    GROUP BY v.cod_item, i.nome_item
+    ORDER BY quantidade_vendida DESC
+    LIMIT 10;'''
+    operator.execute(sql_code)
+    connection.commit()
+    
+#query-cliente
+def cadastro_cliente(cpf:int, nome_cli:str, estado:str, cidade:str, rua:str, numero_casa:int, is_flamengo:bool, see_op:bool):
+    sql_code = "INSERT INTO cliente (cpf,nome_cli,rua,numero_casa,is_Flamengo,see_op,cidade) VALUES %s %s %s %s %s %s %s %s"
+    operator.execute(sql_code,(cpf,nome_cli,estado,rua,numero_casa,is_flamengo,see_op,cidade))
+    connection.commit
+    
+def update_cliente_cpf(old_cpf:int, new_cpf:int, nome_cli:str):
+    sql_code = "UPDATE cliente SET cpf= %s WHERE cpf = %s AND nome_cli = %s"
+    operator.execute(sql_code,(new_cpf,old_cpf,nome_cli))
+    connection.commit()
+    
+def updadte_cliente(cpf:int, nome_cli:str, estado:str, cidade:str, rua:str, numero_casa:int, is_flamengo:bool, see_op:bool):
+    sql_code = '''UPDATE cliente SET nome_cli = %s,
+                  estado = %s,
+                  rua = %s,
+                  numero_casa = %s,
+                  is_Flamengo = %s,
+                  seer_op = %s,
+                  cidade = %s
+                  WHERE cpf = %s'''
+    operator.execute(sql_code,(nome_cli,estado,rua,numero_casa,is_flamengo,see_op,cidade,cpf))
+    connection.commit()
     
 # query-fornecedor
 
