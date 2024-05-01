@@ -47,6 +47,17 @@ def get_compra():
     operator.execute(sql_code)
     return operator.fetchall()
 
+def get_venda_mes(mes):
+    print(mes)
+    sql_code = """
+    SELECT *
+    FROM Venda as v
+    join item as i on i.cod_item = v.cod_item
+    join vendedor as ve on ve.id_vend = v.id_vend
+    WHERE EXTRACT(MONTH FROM v.date_vend) = %s;
+    """
+    operator.execute(sql_code,[f'{mes}'])
+    return operator.fetchall()
 
 # query itens:
 def insert_item(item: InsertType):
@@ -284,12 +295,11 @@ def relatorio(data_inicio:str,data_final:str):
 
 def poucos_itens():
     sql_code = '''SELECT
-            cod_item,
-            em_estoque
+            *
         FROM
             item
         WHERE
-            em_estoque < 5;'''
+            em_estoque < 50;'''
     operator.execute(sql_code)
     connection.commit()
     return operator.fetchall()
