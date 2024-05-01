@@ -22,7 +22,7 @@ def insert_item(item: InsertType):
 
 def remove_item(item_id: int):
     sql_code = "UPDATE item SET em_estoque = 0 WHERE cod_item = %s"
-    operator.execute(sql_code, (datetime.now(), item_id))
+    operator.execute(sql_code, (item_id))
     connection.commit()
     return {"id": item_id}
 
@@ -62,7 +62,7 @@ def mais_vendidos():
 def cadastro_cliente(cpf:int, nome_cli:str, estado:str, cidade:str, rua:str, numero_casa:int, is_flamengo:bool, see_op:bool):
     sql_code = "INSERT INTO cliente (cpf,nome_cli,rua,numero_casa,is_Flamengo,see_op,cidade) VALUES %s %s %s %s %s %s %s %s"
     operator.execute(sql_code,(cpf,nome_cli,estado,rua,numero_casa,is_flamengo,see_op,cidade))
-    connection.commit
+    connection.commit()
     
 def update_cliente_cpf(old_cpf:int, new_cpf:int, nome_cli:str):
     sql_code = "UPDATE cliente SET cpf= %s WHERE cpf = %s AND nome_cli = %s"
@@ -84,11 +84,38 @@ def update_cliente(cpf:int, nome_cli:str, estado:str, cidade:str, rua:str, numer
 # query-fornecedor
 
 def insert_fornecedor(nome_fornecedor:str, salario: int, estado: str):
-    sql_code= "INSERT INTO forncedor (%s,%s,%s) RETURNING id_forn"
+    sql_code= "INSERT INTO forncedor (nome_forn,salario,estado) VALUES (%s,%s,%s) RETURNING id_forn"
     operator.execute(sql_code,(nome_fornecedor,salario,estado))
     new_id= operator.fetchone()['id+forn']
     connection.commit()
     return {"id_forn": new_id,"nome_forn": nome_fornecedor,"salario": salario, "estado": estado}
+
+def update_fornecedor(id_forn:int, nome_forn:str, salario:int, estado:str):
+    sql_code= "UPDATE fornecedor SET nome_forn = %s, salario = %s, estado = %s WHERE id_forn = %s"
+    operator.execute(sql_code,(nome_forn,salario,estado,id_forn))
+    connection.commit()
+    return {"id_forn":id_forn,"nome_forn":nome_forn}
+
+
+#query-vendedor
+
+def insert_vendedor(nome_vendedor:str,salario:int,estado:str,cidade:str,rua:str,num_casa:int):
+    sql_code = "INSERT INTO vendedor (nome_vendedor,salario,estado,rua,num_casa,cidade) VALUES (%s, %s,%s,%s,%s,%s)"
+    operator.execute(sql_code,(nome_vendedor,salario,estado,rua,num_casa,cidade))
+    new_id= operator.fetchone()['id_vend']
+    connection.commit()
+    return {"id_vend":new_id, "nome_vend":nome_vendedor, "salario":salario,"estado":estado,"cidade":cidade,"rua":rua,"num_casa":num_casa}
+
+def update_vendedor(id_vendedor:int,nome_vendedor:str,salario:int,estado:str,cidade:str,rua:str,num_casa:int):
+    sql_code = '''UPDATE vendedor SET nome_vendedor = %s,
+                  salario = %s,
+                  estado = %s,
+                  rua = %s,
+                  numero_casa = %s,
+                  cidade = %s,
+                  WHERE id_vend = %s''' 
+    operator.execute(sql_code,(nome_vendedor,salario,estado,rua,num_casa,cidade,id_vendedor))
+    connection.commit()
 
 
     

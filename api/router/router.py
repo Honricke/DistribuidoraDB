@@ -5,10 +5,10 @@ import sql.operations as op
 
 router = APIRouter()
 
-
-@router.get("/get-items")
-def get_names():
-    return op.get_items()
+## Rotas - Item
+@router.get("/get-itens", response_model=list[ItemType])
+def get_itens():
+    return op.get_itens()
 
 
 @router.post("/insert-name", response_model=ItemType)
@@ -26,14 +26,6 @@ def update_name(req: ItemType):
     return op.update_name(req)
 
 
-@router.put("/update-qtd", response_model=ItemType)
-def update_qtd(req: ItemType):
-    return op.update_qtd(req)
-
-@router.post("/insert_fornecedor",response_model= ItemType)
-def insert_fornecedor(req: ItemType):
-    return op.insert_fornecedor(req)
-
 @router.post("/update_estoque",response_model=ItemType)
 def update_estoque(req: ItemType):
     return op.update_estoque(req)
@@ -46,6 +38,8 @@ def update_price(req: ItemType):
 def mais_vendidos():
     return op.mais_vendidos()    
 
+
+# Rotas- cliente
 @router.put("/cadastro_cliente",response_model= Cliente)
 def cadastro_cliente(req: Cliente):
     return op.cadastro_cliente()
@@ -57,3 +51,24 @@ def update_cliente_cpf(req: Cliente):
 @router.post("/update_cliente",response_model= Cliente)
 def update_cliente(rep: Cliente):
     return op.update_cliente()
+
+
+
+## rotas - forncedor
+@router.post("/insert_fornecedor",response_model = Fornecedor)
+def insert_fornecedor(req: Fornecedor):
+    return op.insert_fornecedor(req)
+
+@router.post("/update_fornecedor",response_model = Fornecedor)
+def update_fornecedor(req: Fornecedor):
+    return op.update_fornecedor(req)
+
+
+## Rotas - vendedor
+@router.post("/insert_vendedor", response_model= Vendedor)
+def insert_fornecedor(req: Vendedor):
+    return op.insert_vendedor(req)
+
+@router.post("/upadate_vendedor", response_model= Vendedor)
+def update_vendedor(req: Vendedor):
+    return op.update_vendedor(req)
