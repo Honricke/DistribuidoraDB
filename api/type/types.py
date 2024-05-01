@@ -24,3 +24,18 @@ class Cliente(BaseModel):
      is_Flamengo: bool
      see_op: bool
     
+class Fornecedor(BaseModel):
+    id_forn: int
+    nome_forn: str
+    salario: int
+    estado: str
+    
+class Vendedor(BaseModel):
+    id_vend: int
+    nome_vendedor: str
+    salario: int
+    estado: str
+    cidade: str
+    rua: str
+    num_casa: int
+    
