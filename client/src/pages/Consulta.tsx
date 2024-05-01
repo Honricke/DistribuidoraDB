@@ -1,4 +1,4 @@
-import { Select, Table } from "antd";
+import { Select, Table, Flex } from "antd";
 import type { TableColumnsType } from "antd";
 import { useState, useCallback } from "react";
 import api from "../request";
@@ -157,17 +157,34 @@ const Consulta = () => {
   const [tableData, setTableData] = useState([]);
   const [tableType, setTableType] = useState<TypeTable>(TypeTable.p);
   const [mesAtual, setMesAtual] = useState("0");
+  const [suportInput, setSuportInput] = useState("");
+  const [suportInput2, setSuportInput2] = useState(0);
+  const [suportInput3, setSuportInput3] = useState(0);
+  const [suportInput4, setSuportInput4] = useState("");
 
   const getTableData = useCallback(
     //@ts-ignore
     async (value: string, options) => {
       try {
         let res;
-        console.log(mesAtual)
-        if (["/get-venda-mes"].includes(value)) {
-          res = await api.post(value, {
-            mesAtual: mesAtual,
-          });
+        console.log(mesAtual);
+        if (["/get-venda-mes", "/x"].includes(value)) {
+          let data;
+          if (value == "/get-venda-mes"){
+            data = {
+             mesAtual: mesAtual 
+            }
+          }
+          else if(value == "/x"){
+            data = {
+              nomeItem: suportInput,
+              minPreco: suportInput2,
+              maxPreco: suportInput3,
+              nomeForn: suportInput4,
+            }
+          }
+
+          res = await api.post(value, data);
         } else {
           res = await api.get(value);
         }
@@ -200,6 +217,16 @@ const Consulta = () => {
               {
                 label: "10 Mais Vendidos",
                 value: "/mais-vendidos",
+                title: TypeTable.p,
+              },
+              {
+                label: "Com menos de 50 estoque",
+                value: "/poucos_itens",
+                title: TypeTable.p,
+              },
+              {
+                label: "Super Select",
+                value: "/poucos_itens",
                 title: TypeTable.p,
               },
             ],
@@ -256,20 +283,76 @@ const Consulta = () => {
         defaultValue={"Selecione o Mês"}
         onChange={(value) => setMesAtual(value)}
         options={[
-          {label: 'Janeiro', value: '1'},
-          {label: 'Fervereiro', value: '2'},
-          {label: 'Março', value: '3'},
-          {label: 'Abril', value: '4'},
-          {label: 'Maio', value: '5'},
-          {label: 'Junho', value: '6'},
-          {label: 'Julho', value: '7'},
-          {label: 'Agosto', value: '8'},
-          {label: 'Setembro', value: '9'},
-          {label: 'Outubro', value: '10'},
-          {label: 'Novembro', value: '11'},
-          {label: 'Dezembro', value: '12'},
+          { label: "Janeiro", value: "1" },
+          { label: "Fervereiro", value: "2" },
+          { label: "Março", value: "3" },
+          { label: "Abril", value: "4" },
+          { label: "Maio", value: "5" },
+          { label: "Junho", value: "6" },
+          { label: "Julho", value: "7" },
+          { label: "Agosto", value: "8" },
+          { label: "Setembro", value: "9" },
+          { label: "Outubro", value: "10" },
+          { label: "Novembro", value: "11" },
+          { label: "Dezembro", value: "12" },
         ]}
-        ></Select>
+      ></Select>
+
+      <Flex gap={10}>
+        <input
+          style={{
+            border: "1px solid black",
+            width: "300px",
+            height: "25px",
+            paddingLeft: 10,
+            borderRadius: 5,
+          }}
+          type="text"
+          placeholder="Nome Item"
+          value={suportInput}
+          onChange={(e) => setSuportInput(e.target.value)}
+        />
+
+        <input
+          style={{
+            border: "1px solid black",
+            width: "50px",
+            height: "25px",
+            paddingLeft: 10,
+            borderRadius: 5,
+          }}
+          type="number"
+          value={suportInput2}
+          onChange={(e) => setSuportInput2(parseInt(e.target.value))}
+        />
+
+        <input
+          style={{
+            border: "1px solid black",
+            width: "50px",
+            height: "25px",
+            paddingLeft: 10,
+            borderRadius: 5,
+          }}
+          type="number"
+          value={suportInput3}
+          onChange={(e) => setSuportInput3(parseInt(e.target.value))}
+        />
+
+        <input
+          style={{
+            border: "1px solid black",
+            width: "300px",
+            height: "25px",
+            paddingLeft: 10,
+            borderRadius: 5,
+          }}
+          type="text"
+          value={suportInput4}
+          placeholder="Nome do Fornecedor"
+          onChange={(e) => setSuportInput4(e.target.value)}
+        />
+      </Flex>
 
       <Table
         style={{ width: "100%", marginTop: 100 }}

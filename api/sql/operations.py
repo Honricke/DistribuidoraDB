@@ -295,12 +295,11 @@ def relatorio(data_inicio:str,data_final:str):
 
 def poucos_itens():
     sql_code = '''SELECT
-            cod_item,
-            em_estoque
+            *
         FROM
             item
         WHERE
-            em_estoque < 5;'''
+            em_estoque < 50;'''
     operator.execute(sql_code)
     connection.commit()
     return operator.fetchall()
