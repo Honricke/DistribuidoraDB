@@ -10,6 +10,26 @@ router = APIRouter()
 def get_itens():
     return op.get_items()
 
+@router.get("/get-vendedor")
+def get_vendedor():
+    return op.get_vendedor()
+
+@router.get("/get-fornecedor")
+def get_fornecedor():
+    return op.get_fornecedor()
+
+@router.get("/get-venda")
+def get_venda():
+    return op.get_venda()
+
+@router.get("/get-compra")
+def get_compra():
+    return op.get_compra()
+
+@router.get("/get-cliente")
+def get_cliente():
+    return op.get_cliente()
+
 
 @router.post("/insert-name", response_model=ItemType)
 def insert_name(req: InsertType):

@@ -6,10 +6,11 @@ import "../styles/consultas.css";
 
 enum TypeTable {
   p = "Produtos",
-  v = "V",
-  ve = "Ve",
-  f = "F",
-  c = "C",
+  v = "Vendedor",
+  ve = "Venda",
+  f = "Fornecedor",
+  c = "Compra",
+  cli = "Cliente",
 }
 
 const columns: { [key in TypeTable]: TableColumnsType } = {
@@ -31,20 +32,37 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
       dataIndex: "em_estoque",
       key: "em_estoque",
     },
+    {
+      title: "QTD Vendida",
+      dataIndex: "quantidade_vendida",
+      key: "quantidade_vendida",
+      width: "10%",
+    },
   ],
   [TypeTable.c]: [
-    { title: "Código", dataIndex: "cod_compra", key: "cod_compra" },
     {
       title: "Fornecedor",
-      dataIndex: "forncedo_comprar",
-      key: "forncedor_compra",
+      dataIndex: "nome_forn",
+      key: "nome_forn",
+      width: "50%"
     },
-    { title: "Data", dataIndex: "data_compra", key: "data_compra" },
+    {
+      title: "Item",
+      dataIndex: "nome_item",
+      key: "nome_item",
+      width: "25%"
+    },
+    {
+      title: "Data",
+      dataIndex: "date_comp",
+      key: "date_comp",
+      render: (text) => stampToStr(text),
+    },
   ],
   [TypeTable.f]: [
-    { title: "Nome", dataIndex: "nome", key: "nome" },
-    { title: "Preco", dataIndex: "preco", key: "preco" },
-    { title: "Estoque", dataIndex: "estoque", key: "estoque" },
+    { title: "Nome", dataIndex: "nome_forn", key: "nome_forn" },
+    { title: "Salário", dataIndex: "salario", key: "salario" },
+    { title: "Estado", dataIndex: "estado", key: "estado" },
   ],
   [TypeTable.v]: [
     { title: "Nome", dataIndex: "nome", key: "nome" },
@@ -56,6 +74,16 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
     { title: "Preco", dataIndex: "preco", key: "preco" },
     { title: "Estoque", dataIndex: "estoque", key: "estoque" },
   ],
+  [TypeTable.cli]: [
+    { title: "CPF", dataIndex: "cpf", key: "cpf" },
+    {
+      title: "Endereço",
+      key: "numero_casa",
+      render: (text, record) =>
+        formatEndereco(record.numero_casa, record.rua, record.estado),
+    },
+    { title: "Estoque", dataIndex: "estoque", key: "estoque" },
+  ],
 };
 
 const toBRL = (number: number) =>
@@ -63,6 +91,16 @@ const toBRL = (number: number) =>
     style: "currency",
     currency: "BRL",
   });
+
+const stampToStr = (text: string) => {
+  const date = new Date(text);
+  const formatDate = date.toLocaleString();
+  return `${formatDate.slice(0, 10)}`;
+};
+
+const formatEndereco = (nmr: string, rua: string, estado: string) => {
+  return `${estado} | ${rua}, ${nmr}`;
+};
 
 const Consulta = () => {
   const [tableData, setTableData] = useState([]);
@@ -115,16 +153,28 @@ const Consulta = () => {
             title: "Compras'",
             label: "Compras",
             options: [
-              { label: "Todas Compras", value: "/Ctodos C" },
-              { label: "10 Mais Comprados", value: "/C10Vend C" },
-              { label: "Comprados Todos Meses", value: "/CVendMeses C" },
+              {
+                label: "Todas Compras",
+                value: "/get-compra",
+                title: TypeTable.c,
+              },
+              {
+                label: "10 Mais Comprados",
+                value: "/C10Vend C",
+                title: TypeTable.c,
+              },
+              {
+                label: "Comprados Todos Meses",
+                value: "/CVendMeses C",
+                title: TypeTable.c,
+              },
             ],
           },
           {
             title: "Vendas'",
             label: "Vendas",
             options: [
-              { label: "Todos", value: "/Vetodos", title: TypeTable.ve },
+              { label: "Todos", value: "/get-venda", title: TypeTable.ve },
               {
                 label: "10 Mais Vendidos",
                 value: "/teste",
@@ -141,18 +191,51 @@ const Consulta = () => {
             title: "Vendedores'",
             label: "Vendedores",
             options: [
-              { label: "Todos", value: "/Vtodos V" },
-              { label: "10 Mais Vendas", value: "/V10Vend V" },
-              { label: "Venderam Todos Meses", value: "/VVendMeses V" },
+              { label: "Todos", value: "/get-vendedor", title: TypeTable.v },
+              {
+                label: "10 Mais Vendas",
+                value: "/V10Vend",
+                title: TypeTable.v,
+              },
+              {
+                label: "Venderam Todos Meses",
+                value: "/VVendMeses",
+                title: TypeTable.v,
+              },
             ],
           },
           {
             title: "Fornecedores'",
             label: "Fornecedores",
             options: [
-              { label: "Todos", value: "/Ftodos F" },
-              { label: "10 Mais Vendas", value: "/F10Vend F" },
-              { label: "Venderam Todos Meses", value: "/FVendMeses F" },
+              { label: "Todos", value: "/get-fornecedor", title: TypeTable.f },
+              {
+                label: "10 Mais Vendas",
+                value: "/F10Vend",
+                title: TypeTable.f,
+              },
+              {
+                label: "Venderam Todos Meses",
+                value: "/FVendMeses",
+                title: TypeTable.f,
+              },
+            ],
+          },
+          {
+            title: "Cliente'",
+            label: "Cliente",
+            options: [
+              { label: "Todos", value: "/get-cliente", title: TypeTable.cli },
+              {
+                label: "10 Mais Compraram",
+                value: "/cliente2",
+                title: TypeTable.cli,
+              },
+              {
+                label: "Compraram Todos Meses",
+                value: "/cliente3",
+                title: TypeTable.cli,
+              },
             ],
           },
         ]}

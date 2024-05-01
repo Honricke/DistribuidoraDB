@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS Vendedor
 	estado varchar(25),
 	rua varchar(70),
 	numero_casa integer,
+	telefone VARCHAR(20),
+    email VARCHAR(100),
 	CONSTRAINT id_vend_pk PRIMARY KEY (id_vend)
 );
 CREATE TABLE IF NOT EXISTS Item
@@ -28,17 +30,24 @@ CREATE TABLE IF NOT EXISTS Item
 CREATE TABLE IF NOT EXISTS Fornecedor
 (
 	id_forn SERIAL NOT NULL,
-	nome_forn varchar(40) NOT NULL,
-	salario integer NOT NULL,
+	nome_forn varchar(100) NOT NULL,	
+	nome_empresa varchar(100),	
+	telefone varchar(20),	
+	email varchar(100),
 	estado varchar(25),
+	rua varchar(70),
+	numero_casa integer,
 	CONSTRAINT id_forn_pk PRIMARY KEY (id_forn)
 );
 CREATE TABLE IF NOT EXISTS Compra
 (
+	cod_comp SERIAL,
 	cod_item INTEGER,
+	valor_comp INTEGER,
+	metodo_pagamento VARCHAR(50),
 	id_forn INTEGER,
 	date_comp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	CONSTRAINT full_pk PRIMARY KEY (cod_item,id_forn,date_comp),
+	CONSTRAINT full_pk PRIMARY KEY (cod_comp),
 	CONSTRAINT cod_item_fk FOREIGN KEY (cod_item)
 	REFERENCES Item (cod_item),
 	CONSTRAINT id_forn_fk FOREIGN KEY (id_forn)
@@ -50,6 +59,8 @@ CREATE TABLE IF NOT EXISTS Venda
 	cod_item INTEGER,
 	id_vend INTEGER,
 	cpf_cli VARCHAR(20),
+	valor_comp INTEGER,
+	metodo_pagamento VARCHAR(50),
 	date_vend TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT cod_vend_pk PRIMARY KEY (cod_vend),
 	CONSTRAINT cod_item_fk FOREIGN KEY (cod_item)
