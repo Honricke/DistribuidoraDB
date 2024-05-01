@@ -259,4 +259,25 @@ def insert_venda(
     connection.commit()
     return {"cod_vend":new_id,"cpf_cliente":cpf_cliente,"id_vendedor":id_vendedor,"cod_item":cod_item,"qtd_item":qtd_item,"tipo_pagamento":tipo_pagamento}
 
-    
+## query especifica
+
+def relatorio(data_inicio:str,data_final:str):
+    sql_code = '''SELECT
+        v.nome_vend AS Nome_do_Vendedor,
+        EXTRACT(YEAR FROM vda.data_vend) AS Ano,
+        EXTRACT(MONTH FROM vda.data_vend) AS Mes,
+        COUNT(vda.cod_venda) AS Número_de_Vendas,
+        SUM(vda.qtd_item) AS Total_de_Itens_Vendidos,
+        SUM(vda.preco_final) AS Receita_Total
+    FROM
+        venda vda
+    JOIN
+        vendedor v ON vda.id_vendedor = v.id_vendedor
+    WHERE
+        vda.data_vend >= '%s' AND vda.data_vend < '%s' + INTERVAL '1 MONTH'
+    GROUP BY
+        v.nome_vend, EXTRACT(YEAR FROM vda.data_vend), EXTRACT(MONTH FROM vda.data_vend)
+    ORDER BY
+        v.nome_vend, Ano, Mês;'''
+    operator.execute(sql_code,(data_inicio,data_final))
+    connection.commit()
