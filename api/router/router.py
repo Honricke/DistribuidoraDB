@@ -6,9 +6,9 @@ import sql.operations as op
 router = APIRouter()
 
 ## Rotas - Item
-@router.get("/get-itens", response_model=list[ItemType])
+@router.get("/get-items")
 def get_itens():
-    return op.get_itens()
+    return op.get_items()
 
 
 @router.post("/insert-name", response_model=ItemType)
