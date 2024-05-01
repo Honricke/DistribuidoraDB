@@ -293,3 +293,33 @@ def poucos_itens():
     operator.execute(sql_code)
     connection.commit()
     return operator.fetchall()
+
+
+def faixa_preco(menor_preco:int,maior_preco:int):
+    sql_code = '''SELECT
+            cod_item,
+            nome_item,
+            preco
+        FROM
+            item
+        WHERE
+            preco BETWEEN %s AND %s;'''
+    operator.execute(sql_code,(menor_preco,maior_preco))
+    connection.commit()
+    return operator.fetchall()
+
+def pesquisa_completa(nome_item:str,menor_preco:int,maior_preco:int):
+    sql_code = '''SELECT
+    cod_item,
+    nome_item,
+    preco,
+    
+FROM
+    item
+WHERE
+    (nome_item LIKE COALESCE(:%s, nome_item))
+    AND (preco BETWEEN COALESCE(:%s, preco) AND COALESCE(:%s, preco));'''
+    operator.execute(sql_code,(nome_item,menor_preco,maior_preco))
+    connection.commit()
+    return operator.fetchall()
+    

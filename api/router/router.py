@@ -110,3 +110,12 @@ def relatorio(req1:str,req2:str):
 @router.get("/poucos_itens")
 def poucos_itens():
     return op.poucos_itens()
+
+@router.get("/faixa_preco")
+def faixa_preco(req1:int,req2:int):
+    return op.faixa_preco(req1,req2)
+
+
+@router.get("/pesquisa_completa")
+def pesquisa_completa(req:str,re2:int,req3:int):
+    return op.pesquisa_completa(req,re2,req3)
