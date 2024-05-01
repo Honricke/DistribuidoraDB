@@ -48,3 +48,9 @@ class Venda(BaseModel):
 
 class Mes(BaseModel):
     mesAtual: str
+
+class Tipos(BaseModel):
+    nomeItem: str
+    minPreco: int
+    maxPreco: int
+
