@@ -44,13 +44,13 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
       title: "Fornecedor",
       dataIndex: "nome_forn",
       key: "nome_forn",
-      width: "50%"
+      width: "50%",
     },
     {
       title: "Item",
       dataIndex: "nome_item",
       key: "nome_item",
-      width: "25%"
+      width: "25%",
     },
     {
       title: "Data",
@@ -70,9 +70,28 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
     { title: "Estoque", dataIndex: "estoque", key: "estoque" },
   ],
   [TypeTable.ve]: [
-    { title: "Data", dataIndex: "data", key: "data" },
-    { title: "Preco", dataIndex: "preco", key: "preco" },
-    { title: "Estoque", dataIndex: "estoque", key: "estoque" },
+    { title: "Cód Venda", dataIndex: "cod_vend", key: "cod_vend" },
+    {
+      title: "Data Venda",
+      dataIndex: "date_vend",
+      key: "date_vend",
+      render: (text) => stampToStr(text),
+    },
+    {
+      title: "Método Pagamento",
+      dataIndex: "metodo_pagamento",
+      key: "metodo_pagamento",
+    },
+    { title: "Nome Vendedor", dataIndex: "nome_vend", key: "nome_vend" },
+    { title: "Nome Item", dataIndex: "nome_item", key: "nome_item" },
+    { title: "Email", dataIndex: "email", key: "email" },
+    { title: "Valor", dataIndex: "valor_comp", key: "valor_comp", render: text => toBRL(text) },
+    {
+      title: "Endereço",
+      dataIndex: "numero_casa",
+      key: "numero_casa",
+      render: (text, record) => formatEndereco(record.numero_casa, record.rua, record.estado),
+    },
   ],
   [TypeTable.cli]: [
     { title: "CPF", dataIndex: "cpf", key: "cpf" },

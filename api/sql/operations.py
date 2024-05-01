@@ -22,6 +22,7 @@ def get_fornecedor():
     operator.execute(sql_code)
     return operator.fetchall()
 
+
 def get_cliente():
     sql_code = "SELECT * FROM cliente"
     operator.execute(sql_code)
@@ -29,14 +30,17 @@ def get_cliente():
 
 
 def get_venda():
-    sql_code = "SELECT * FROM venda"
+    sql_code = """SELECT * 
+    FROM venda as v
+    join item as i on i.cod_item = v.cod_item
+    join vendedor as ve on ve.id_vend = v.id_vend"""
     operator.execute(sql_code)
     return operator.fetchall()
 
 
 def get_compra():
     sql_code = """
-    select c.date_comp, i.nome_item, f.nome_forn
+    select *
     from compra as c
     join item as i on i.cod_item = c.cod_item
     join fornecedor as f on f.id_forn = c.id_forn"""
@@ -207,10 +211,18 @@ def update_vendedor(
     )
     connection.commit()
 
-#query - vendas
 
-def insert_venda(id_vendedor:int, cod_item:int, cpf_cliente:int, qtd_item:int, tipo_pagamento:int):
-    sql_code = '''INSERT INTO venda (cod_item, cpf_cli,id_vend,data_vend, tipo_pagamento, qtd_item, preco_final) 
+# query - vendas
+
+
+def insert_venda(
+    id_vendedor: int,
+    cod_item: int,
+    cpf_cliente: int,
+    qtd_item: int,
+    tipo_pagamento: int,
+):
+    sql_code = """INSERT INTO venda (cod_item, cpf_cli,id_vend,data_vend, tipo_pagamento, qtd_item, preco_final) 
     VALUES (%s,%s,%s,%s,%s) 
     SELECT
         @id_vendedor,
@@ -230,34 +242,21 @@ def insert_venda(id_vendedor:int, cod_item:int, cpf_cliente:int, qtd_item:int, t
     WHERE
         cliente.cpf_cliente = @cpf_cliente
         AND item.em_estoque >= @qtd_item;
-        '''
-    operator.execute(sql_code,(cod_item,cpf_cliente,id_vendedor,qtd_item,datetime.now(),tipo_pagamento,qtd_item))
-    new_id= operator.fetchone()['cod_vend']
+        """
+    operator.execute(
+        sql_code,
+        (
+            cod_item,
+            cpf_cliente,
+            id_vendedor,
+            qtd_item,
+            datetime.now(),
+            tipo_pagamento,
+            qtd_item,
+        ),
+    )
+    new_id = operator.fetchone()["cod_vend"]
     connection.commit()
     return {"cod_vend":new_id,"cpf_cliente":cpf_cliente,"id_vendedor":id_vendedor,"cod_item":cod_item,"qtd_item":qtd_item,"tipo_pagamento":tipo_pagamento}
 
-
-
-## query especifica
-
-def relatorio(data_inicio:str,data_final:str):
-    sql_code = '''SELECT
-        v.nome_vend AS Nome_do_Vendedor,
-        EXTRACT(YEAR FROM vda.data_vend) AS Ano,
-        EXTRACT(MONTH FROM vda.data_vend) AS Mes,
-        COUNT(vda.cod_venda) AS Número_de_Vendas,
-        SUM(vda.qtd_item) AS Total_de_Itens_Vendidos,
-        SUM(vda.preco_final) AS Receita_Total
-    FROM
-        venda vda
-    JOIN
-        vendedor v ON vda.id_vendedor = v.id_vendedor
-    WHERE
-        vda.data_vend >= '%s' AND vda.data_vend < '%s' + INTERVAL '1 MONTH'
-    GROUP BY
-        v.nome_vend, EXTRACT(YEAR FROM vda.data_vend), EXTRACT(MONTH FROM vda.data_vend)
-    ORDER BY
-        v.nome_vend, Ano, Mês;'''
-    operator.execute(sql_code,(data_inicio,data_final))
-    connection.commit()
     
