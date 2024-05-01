@@ -38,4 +38,10 @@ class Vendedor(BaseModel):
     cidade: str
     rua: str
     num_casa: int
-    
+
+class Venda(BaseModel):
+    cod_vendedor:int 
+    cod_item:int 
+    cpf_cliente:int 
+    qtd_item:int 
+    tipo_pagamento:int

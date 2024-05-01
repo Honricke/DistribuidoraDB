@@ -92,3 +92,10 @@ def insert_fornecedor(req: Vendedor):
 @router.post("/upadate_vendedor", response_model= Vendedor)
 def update_vendedor(req: Vendedor):
     return op.update_vendedor(req)
+
+
+##Rotas - venda
+
+@router.post("/insert_venda",response_model= Venda)
+def insert_venda(req: Venda):
+    return op.insert_venda(req)
