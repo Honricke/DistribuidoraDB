@@ -117,5 +117,33 @@ def update_vendedor(id_vendedor:int,nome_vendedor:str,salario:int,estado:str,cid
     operator.execute(sql_code,(nome_vendedor,salario,estado,rua,num_casa,cidade,id_vendedor))
     connection.commit()
 
+#query - vendas
+
+def insert_venda(id_vendedor:int, cod_item:int, cpf_cliente:int, qtd_item:int, tipo_pagamento:int):
+    sql_code = '''INSERT INTO venda (cod_item, cpf_cli,id_vend,data_vend, tipo_pagamento, qtd_item, preco_final) 
+    VALUES (%s,%s,%s,%s,%s) 
+    SELECT
+        @id_vendedor,
+        @id_item,
+        cliente.cpf_cliente,
+        @data_venda,
+        @tipo_pagamento,
+        @qtd_item,
+        CASE
+            WHEN cliente.is_Flamengo = TRUE OR cliente.see_op = TRUE OR cliente.endereco LIKE '%Souza%' THEN item.preco * @qtd_item * 0.9
+            ELSE item.preco * @qtd_item
+        END AS preco_final
+    FROM
+        cliente
+    JOIN
+        item ON item.id_item = @id_item
+    WHERE
+        cliente.cpf_cliente = @cpf_cliente
+        AND item.em_estoque >= @qtd_item;
+        '''
+    operator.execute(sql_code,(cod_item,cpf_cliente,id_vendedor,qtd_item,datetime.now(),tipo_pagamento,qtd_item))
+    new_id= operator.fetchone()['cod_vend']
+    connection.commit()
+    return {"cod_vend":new_id,"cpf_cliente":cpf_cliente,"id_vendedor":id_vendedor,"cod_item":cod_item,"qtd_item":qtd_item,"tipo_pagamento":tipo_pagamento}
 
     
