@@ -103,3 +103,14 @@ def update_vendedor(req: Vendedor):
 @router.post("/insert_venda",response_model= Venda)
 def insert_venda(req: Venda):
     return op.insert_venda(req)
+
+
+##Rota - especifica
+
+@router.get("/relatorio")
+def relatorio(req1:str,req2:str):
+    return op.relatorio(req1,req2)
+
+@router.get("/poucos_itens")
+def poucos_itens():
+    return op.poucos_itens()
