@@ -45,3 +45,6 @@ class Venda(BaseModel):
     cpf_cliente:int 
     qtd_item:int 
     tipo_pagamento:int
+
+class Mes(BaseModel):
+    mesAtual: str

@@ -30,6 +30,10 @@ def get_compra():
 def get_cliente():
     return op.get_cliente()
 
+@router.post("/get-venda-mes")
+def get_venda_mes(req: Mes):
+    return op.get_venda_mes(req.mesAtual)
+
 
 @router.post("/insert-name", response_model=ItemType)
 def insert_name(req: InsertType):

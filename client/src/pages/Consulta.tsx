@@ -41,16 +41,42 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
   ],
   [TypeTable.c]: [
     {
+      title: "Cód Compra",
+      dataIndex: "cod_comp",
+      key: "cod_comp",
+    },
+    {
       title: "Fornecedor",
       dataIndex: "nome_forn",
       key: "nome_forn",
-      width: "50%",
     },
     {
       title: "Item",
       dataIndex: "nome_item",
       key: "nome_item",
-      width: "25%",
+    },
+    {
+      title: "Estoque",
+      dataIndex: "em_estoque",
+      key: "em_estoque",
+    },
+    {
+      title: "Endereço",
+      dataIndex: "numero_cara",
+      key: "numero_cara",
+      render: (text, record) =>
+        formatEndereco(record.numero_casa, record.rua, record.estado),
+    },
+    {
+      title: "Método Pagamento",
+      dataIndex: "metodo_pagamento",
+      key: "metodo_pagamento",
+    },
+    {
+      title: "Preço",
+      dataIndex: "preco",
+      key: "preco",
+      render: (text) => toBRL(text),
     },
     {
       title: "Data",
@@ -85,12 +111,18 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
     { title: "Nome Vendedor", dataIndex: "nome_vend", key: "nome_vend" },
     { title: "Nome Item", dataIndex: "nome_item", key: "nome_item" },
     { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Valor", dataIndex: "valor_comp", key: "valor_comp", render: text => toBRL(text) },
+    {
+      title: "Valor",
+      dataIndex: "valor_comp",
+      key: "valor_comp",
+      render: (text) => toBRL(text),
+    },
     {
       title: "Endereço",
       dataIndex: "numero_casa",
       key: "numero_casa",
-      render: (text, record) => formatEndereco(record.numero_casa, record.rua, record.estado),
+      render: (text, record) =>
+        formatEndereco(record.numero_casa, record.rua, record.estado),
     },
   ],
   [TypeTable.cli]: [
@@ -124,12 +156,21 @@ const formatEndereco = (nmr: string, rua: string, estado: string) => {
 const Consulta = () => {
   const [tableData, setTableData] = useState([]);
   const [tableType, setTableType] = useState<TypeTable>(TypeTable.p);
+  const [mesAtual, setMesAtual] = useState("0");
 
   const getTableData = useCallback(
     //@ts-ignore
     async (value: string, options) => {
       try {
-        const res = await api.get(value);
+        let res;
+        console.log(mesAtual)
+        if (["/get-venda-mes"].includes(value)) {
+          res = await api.post(value, {
+            mesAtual: mesAtual,
+          });
+        } else {
+          res = await api.get(value);
+        }
         console.log(res.data);
         setTableType(options.title);
         setTableData(res.data);
@@ -161,11 +202,6 @@ const Consulta = () => {
                 value: "/mais-vendidos",
                 title: TypeTable.p,
               },
-              {
-                label: "Vendidos Todos Meses",
-                value: "/PVendMeses P",
-                title: TypeTable.p,
-              },
             ],
           },
           {
@@ -177,16 +213,6 @@ const Consulta = () => {
                 value: "/get-compra",
                 title: TypeTable.c,
               },
-              {
-                label: "10 Mais Comprados",
-                value: "/C10Vend C",
-                title: TypeTable.c,
-              },
-              {
-                label: "Comprados Todos Meses",
-                value: "/CVendMeses C",
-                title: TypeTable.c,
-              },
             ],
           },
           {
@@ -195,13 +221,8 @@ const Consulta = () => {
             options: [
               { label: "Todos", value: "/get-venda", title: TypeTable.ve },
               {
-                label: "10 Mais Vendidos",
-                value: "/teste",
-                title: TypeTable.ve,
-              },
-              {
-                label: "Vendidos Todos Meses",
-                value: "/VeVendMeses",
+                label: "Vendas do Mês",
+                value: "/get-venda-mes",
                 title: TypeTable.ve,
               },
             ],
@@ -211,16 +232,6 @@ const Consulta = () => {
             label: "Vendedores",
             options: [
               { label: "Todos", value: "/get-vendedor", title: TypeTable.v },
-              {
-                label: "10 Mais Vendas",
-                value: "/V10Vend",
-                title: TypeTable.v,
-              },
-              {
-                label: "Venderam Todos Meses",
-                value: "/VVendMeses",
-                title: TypeTable.v,
-              },
             ],
           },
           {
@@ -228,16 +239,6 @@ const Consulta = () => {
             label: "Fornecedores",
             options: [
               { label: "Todos", value: "/get-fornecedor", title: TypeTable.f },
-              {
-                label: "10 Mais Vendas",
-                value: "/F10Vend",
-                title: TypeTable.f,
-              },
-              {
-                label: "Venderam Todos Meses",
-                value: "/FVendMeses",
-                title: TypeTable.f,
-              },
             ],
           },
           {
@@ -245,20 +246,30 @@ const Consulta = () => {
             label: "Cliente",
             options: [
               { label: "Todos", value: "/get-cliente", title: TypeTable.cli },
-              {
-                label: "10 Mais Compraram",
-                value: "/cliente2",
-                title: TypeTable.cli,
-              },
-              {
-                label: "Compraram Todos Meses",
-                value: "/cliente3",
-                title: TypeTable.cli,
-              },
             ],
           },
         ]}
       ></Select>
+
+      <Select
+        style={{ width: "150px" }}
+        defaultValue={"Selecione o Mês"}
+        onChange={(value) => setMesAtual(value)}
+        options={[
+          {label: 'Janeiro', value: '1'},
+          {label: 'Fervereiro', value: '2'},
+          {label: 'Março', value: '3'},
+          {label: 'Abril', value: '4'},
+          {label: 'Maio', value: '5'},
+          {label: 'Junho', value: '6'},
+          {label: 'Julho', value: '7'},
+          {label: 'Agosto', value: '8'},
+          {label: 'Setembro', value: '9'},
+          {label: 'Outubro', value: '10'},
+          {label: 'Novembro', value: '11'},
+          {label: 'Dezembro', value: '12'},
+        ]}
+        ></Select>
 
       <Table
         style={{ width: "100%", marginTop: 100 }}
