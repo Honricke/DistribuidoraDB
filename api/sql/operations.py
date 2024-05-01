@@ -281,3 +281,15 @@ def relatorio(data_inicio:str,data_final:str):
         v.nome_vend, Ano, Mês;'''
     operator.execute(sql_code,(data_inicio,data_final))
     connection.commit()
+
+def poucos_itens():
+    sql_code = '''SELECT
+            cod_item,
+            em_estoque
+        FROM
+            item
+        WHERE
+            em_estoque < 5;'''
+    operator.execute(sql_code)
+    connection.commit()
+    return operator.fetchall()
