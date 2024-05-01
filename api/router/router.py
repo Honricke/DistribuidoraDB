@@ -120,6 +120,6 @@ def faixa_preco(req1:int,req2:int):
     return op.faixa_preco(req1,req2)
 
 
-@router.get("/pesquisa_completa")
-def pesquisa_completa(req:str,re2:int,req3:int):
-    return op.pesquisa_completa(req,re2,req3)
+@router.post("/pesquisa_completa")
+def pesquisa_completa(req: Tipos):
+    return op.pesquisa_completa(req.nomeItem,req.minPreco,req.maxPreco)

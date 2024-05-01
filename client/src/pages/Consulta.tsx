@@ -62,8 +62,8 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
     },
     {
       title: "Endereço",
-      dataIndex: "numero_cara",
-      key: "numero_cara",
+      dataIndex: "numero_casa",
+      key: "numero_casa",
       render: (text, record) =>
         formatEndereco(record.numero_casa, record.rua, record.estado),
     },
@@ -86,14 +86,35 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
     },
   ],
   [TypeTable.f]: [
-    { title: "Nome", dataIndex: "nome_forn", key: "nome_forn" },
-    { title: "Salário", dataIndex: "salario", key: "salario" },
-    { title: "Estado", dataIndex: "estado", key: "estado" },
+    { title: "Nome Representante", dataIndex: "nome_forn", key: "nome_forn" },
+    { title: "Nome Empresa", dataIndex: "nome_empresa", key: "nome_empresa" },
+    { title: "Email", dataIndex: "email", key: "email" },
+    {
+      title: "Endereço",
+      dataIndex: "numero_casa",
+      key: "numero_casa",
+      render: (text, record) =>
+        formatEndereco(record.numero_casa, record.rua, record.estado),
+    },
+    { title: "Telefone", dataIndex: "telefone", key: "telefone" },
   ],
   [TypeTable.v]: [
-    { title: "Nome", dataIndex: "nome", key: "nome" },
-    { title: "Preco", dataIndex: "preco", key: "preco" },
-    { title: "Estoque", dataIndex: "estoque", key: "estoque" },
+    { title: "Nome", dataIndex: "nome_vend", key: "nome_vend" },
+    {
+      title: "Endereço",
+      dataIndex: "numero_casa",
+      key: "numero_casa",
+      render: (text, record) =>
+        formatEndereco(record.numero_casa, record.rua, record.estado),
+    },
+    { title: "Telefone", dataIndex: "telefone", key: "telefone" },
+    {
+      title: "Salario",
+      dataIndex: "salario",
+      key: "salario",
+      render: (text) => toBRL(text),
+    },
+    { title: "Email", dataIndex: "email", key: "email" },
   ],
   [TypeTable.ve]: [
     { title: "Cód Venda", dataIndex: "cod_vend", key: "cod_vend" },
@@ -127,13 +148,13 @@ const columns: { [key in TypeTable]: TableColumnsType } = {
   ],
   [TypeTable.cli]: [
     { title: "CPF", dataIndex: "cpf", key: "cpf" },
+    { title: "Nome", dataIndex: "nome_cli", key: "nome_cli" },
     {
       title: "Endereço",
       key: "numero_casa",
       render: (text, record) =>
         formatEndereco(record.numero_casa, record.rua, record.estado),
     },
-    { title: "Estoque", dataIndex: "estoque", key: "estoque" },
   ],
 };
 
@@ -160,7 +181,6 @@ const Consulta = () => {
   const [suportInput, setSuportInput] = useState("");
   const [suportInput2, setSuportInput2] = useState(0);
   const [suportInput3, setSuportInput3] = useState(0);
-  const [suportInput4, setSuportInput4] = useState("");
 
   const getTableData = useCallback(
     //@ts-ignore
@@ -168,20 +188,18 @@ const Consulta = () => {
       try {
         let res;
         console.log(mesAtual);
-        if (["/get-venda-mes", "/x"].includes(value)) {
+        if (["/get-venda-mes", "/pesquisa_completa"].includes(value)) {
           let data;
-          if (value == "/get-venda-mes"){
+          if (value == "/get-venda-mes") {
             data = {
-             mesAtual: mesAtual 
-            }
-          }
-          else if(value == "/x"){
+              mesAtual: mesAtual,
+            };
+          } else if (value == "/pesquisa_completa") {
             data = {
               nomeItem: suportInput,
               minPreco: suportInput2,
               maxPreco: suportInput3,
-              nomeForn: suportInput4,
-            }
+            };
           }
 
           res = await api.post(value, data);
@@ -226,7 +244,7 @@ const Consulta = () => {
               },
               {
                 label: "Super Select",
-                value: "/poucos_itens",
+                value: "/pesquisa_completa",
                 title: TypeTable.p,
               },
             ],
@@ -338,24 +356,10 @@ const Consulta = () => {
           value={suportInput3}
           onChange={(e) => setSuportInput3(parseInt(e.target.value))}
         />
-
-        <input
-          style={{
-            border: "1px solid black",
-            width: "300px",
-            height: "25px",
-            paddingLeft: 10,
-            borderRadius: 5,
-          }}
-          type="text"
-          value={suportInput4}
-          placeholder="Nome do Fornecedor"
-          onChange={(e) => setSuportInput4(e.target.value)}
-        />
       </Flex>
 
       <Table
-        style={{ width: "100%", marginTop: 100 }}
+        style={{ width: "100%", marginTop: 25 }}
         columns={columns[tableType]}
         dataSource={tableData}
         pagination={{ hideOnSinglePage: true }}
