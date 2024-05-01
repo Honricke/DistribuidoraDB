@@ -73,16 +73,3 @@ INSERT INTO Venda (cod_item, id_vend, cpf_cli, date_vend) VALUES
 (38, 32, '88899977766', CURRENT_TIMESTAMP),
 (39, 33, '22211133344', CURRENT_TIMESTAMP),
 (40, 31, '12345678999', CURRENT_TIMESTAMP);
-
--- Mais dados de inserção para a tabela Compra com variação nos valores de id_forn e permitindo repetições
-INSERT INTO Compra (cod_item, id_forn, date_comp) VALUES
-(31, 31, CURRENT_TIMESTAMP),
-(32, 32, CURRENT_TIMESTAMP),
-(33, 33, CURRENT_TIMESTAMP),
-(34, 31, CURRENT_TIMESTAMP),
-(35, 32, CURRENT_TIMESTAMP),
-(36, 33, CURRENT_TIMESTAMP),
-(37, 31, CURRENT_TIMESTAMP),
-(38, 32, CURRENT_TIMESTAMP),
-(39, 33, CURRENT_TIMESTAMP),
-(40, 31, CURRENT_TIMESTAMP);

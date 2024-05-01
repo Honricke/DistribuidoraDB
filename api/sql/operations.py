@@ -6,12 +6,10 @@ from datetime import datetime, timezone
 
 
 
-def get_itens():
+def get_items():
     sql_code = "SELECT * FROM item"
     operator.execute(sql_code)
-    response = operator.fetchall()
-    names = [row['nome_item'] for row in response]
-    return names
+    return operator.fetchall()
 
 #query itens:
 def insert_item(item: InsertType):
@@ -49,14 +47,16 @@ def update_price(item_id: int,new_price: int):
     return {"cod_item": item_id, "price":new_price}
 
 def mais_vendidos():
-    sql_code =  '''SELECT i.nome_item, COUNT(v.cod_item) AS quantidade_vendida
+    sql_code =  '''
+    SELECT i.nome_item, COUNT(v.cod_item) AS quantidade_vendida, i.preco, i.em_estoque
     FROM venda v
     JOIN item i ON v.cod_item = i.cod_item
-    GROUP BY v.cod_item, i.nome_item
+    GROUP BY i.nome_item, i.preco, i.em_estoque
     ORDER BY quantidade_vendida DESC
     LIMIT 10;'''
     operator.execute(sql_code)
     connection.commit()
+    return operator.fetchall()
     
 #query-cliente
 def cadastro_cliente(cpf:int, nome_cli:str, estado:str, cidade:str, rua:str, numero_casa:int, is_flamengo:bool, see_op:bool):

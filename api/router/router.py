@@ -6,9 +6,9 @@ import sql.operations as op
 router = APIRouter()
 
 
-@router.get("/get-names", response_model=list[ItemType])
+@router.get("/get-items")
 def get_names():
-    return op.get_names()
+    return op.get_items()
 
 
 @router.post("/insert-name", response_model=ItemType)
@@ -42,7 +42,7 @@ def update_estoque(req: ItemType):
 def update_price(req: ItemType):
     return op.update_price(req)
 
-@router.get("/mais_vendidos")
+@router.get("/mais-vendidos")
 def mais_vendidos():
     return op.mais_vendidos()    
 

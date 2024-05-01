@@ -1,13 +1,14 @@
 import psycopg2
+from psycopg2.extras import RealDictCursor
 
 
 connection = psycopg2.connect(
-        host = 'localhost', 
-        database = 'estoque',
-        user = 'postgres',
-        password = 'waradu',
-        port = '5432'
-        )
+    host="aws-0-sa-east-1.pooler.supabase.com",
+    database="postgres",
+    user="postgres.clrkbwrkciyexghzrhat",
+    password="2mlGZvMvAO2OWID6",
+    port="5432",
+    cursor_factory=RealDictCursor,
+)
+
 operator = connection.cursor()
-
-
